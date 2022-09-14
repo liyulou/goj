@@ -54,9 +54,9 @@ const (
 )
 
 // ASM optimized scanning routines
-func hasAsm() bool
-func scanNumberCharsASM(s []byte, offset int) int
-func scanNonSpecialStringCharsASM(s []byte, offset int) int
+//func hasAsm() bool
+//func scanNumberCharsASM(s []byte, offset int) int
+//func scanNonSpecialStringCharsASM(s []byte, offset int) int
 
 //go:nosplit
 func scanNonSpecialStringCharsGo(s []byte, offset int) (x int) {
@@ -78,8 +78,8 @@ func scanNumberCharsGo(s []byte, offset int) (x int) {
 	return len(s) - offset
 }
 
-func scanBraces(s []byte, offset int) int
-func scanBrackets(s []byte, offset int) int
+//func scanBraces(s []byte, offset int) int
+//func scanBrackets(s []byte, offset int) int
 
 //go:nosplit
 func scanBracesGo(s []byte, offset int) int {
@@ -567,13 +567,13 @@ func (p *Parser) skipSection(scan func([]byte, int) int, open,close byte) error 
 	return nil
 }
 
-func (p *Parser) skipObject() error {
-	return p.skipSection(scanBraces, '{','}')
-}
+//func (p *Parser) skipObject() error {
+//	return p.skipSection(scanBraces, '{','}')
+//}
 
-func (p *Parser) skipArray() error {
-	return p.skipSection(scanBrackets, '[',']')
-}
+//func (p *Parser) skipArray() error {
+//	return p.skipSection(scanBrackets, '[',']')
+//}
 
 // NewParser - Allocate a new JSON Scanner that may be re-used.
 func NewParser() *Parser {
@@ -606,15 +606,15 @@ func (p *Parser) Parse(buf []byte, cb Callback) (err error) {
 	p.states = p.states[:0]
 	p._cb = cb
 	depth := 0
-	if hasAsm() {
-		if recordNearPage(buf) {
-			p.scanNonSpecialStringChars = scanNonSpecialStringCharsGo
-			p.scanNumberChars = scanNumberCharsGo
-		} else {
-			p.scanNonSpecialStringChars = scanNonSpecialStringCharsASM
-			p.scanNumberChars = scanNumberCharsASM
-		}
-	} // else we don't have to ever worry about that.
+// 	if hasAsm() {
+// 		if recordNearPage(buf) {
+// 			p.scanNonSpecialStringChars = scanNonSpecialStringCharsGo
+// 			p.scanNumberChars = scanNumberCharsGo
+// 		} else {
+// 			p.scanNonSpecialStringChars = scanNonSpecialStringCharsASM
+// 			p.scanNumberChars = scanNumberCharsASM
+// 		}
+// 	} // else we don't have to ever worry about that.
 scan:
 	for len(buf) > p.i {
 		switch p.s {
@@ -786,13 +786,13 @@ scan:
 		case sClientCancelledParse:
 			return ClientCancelledParse
 		case sClientSkippingObject:
-			if err = p.skipObject(); err != nil {
-				return err
-			}
+			// if err = p.skipObject(); err != nil {
+			//	return err
+			// }
 		case sClientSkippingArray:
-			if err = p.skipArray(); err != nil {
-				return err
-			}
+			// if err = p.skipArray(); err != nil {
+			//	return err
+			// }
 		default:
 			return p.pError(fmt.Sprintf("hit unimplemented state: %v", p.s))
 		}
